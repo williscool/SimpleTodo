@@ -10,6 +10,10 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -25,13 +29,12 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         listViewItems = (ListView) findViewById(R.id.listView);
-        items = new ArrayList<String>();
+
+        items = readItems();
+
         itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, items);
 
         listViewItems.setAdapter(itemsAdapter);
-
-        items.add("First Item");
-        items.add("Second Item");
 
         listViewItems.setOnItemLongClickListener(
                 new AdapterView.OnItemLongClickListener() {
@@ -41,6 +44,7 @@ public class MainActivity extends ActionBarActivity {
 
                     items.remove(position);
                     itemsAdapter.notifyDataSetChanged();
+                    writeItems(items);
                     return true;
                 }
 
@@ -76,5 +80,29 @@ public class MainActivity extends ActionBarActivity {
 
         itemsAdapter.add(itemText);
         etNewItem.setText("");
+        writeItems(items);
+    }
+
+    ArrayList<String> readItems(){
+        File filesDir = getFilesDir();
+        File todoFile = new File(filesDir,"todo.txt");
+
+        try {
+            return (ArrayList<String>) FileUtils.readLines(todoFile) ;
+        } catch (IOException e){
+            e.printStackTrace();
+            return new ArrayList<String>();
+        }
+    }
+
+    private void writeItems(ArrayList<String> itms){
+        File filesDir = getFilesDir();
+        File todoFile = new File(filesDir,"todo.txt");
+
+        try {
+            FileUtils.writeLines(todoFile, itms);
+        } catch (IOException e){
+            e.printStackTrace();
+        }
     }
 }
