@@ -2,8 +2,9 @@
 <resources>
 
     <string name="app_name">SimpleTodo</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="edit_title"> Edit item below: </string>
     <string name="action_settings">Settings</string>
     <string name="simple_todo_text"> Add Item</string>
+    <string name="title_activity_edit_item">EditItemActivity</string>
 
 </resources>

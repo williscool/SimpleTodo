@@ -1,5 +1,6 @@
 package com.upscalews.will.simpletodo;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -9,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.apache.commons.io.FileUtils;
 
@@ -22,6 +24,7 @@ public class MainActivity extends ActionBarActivity {
     ArrayList<String> items;
     ArrayAdapter<String> itemsAdapter;
     ListView listViewItems;
+    final int REQUEST_CODE = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +52,38 @@ public class MainActivity extends ActionBarActivity {
                 }
 
         });
+
+        listViewItems.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String curItem = items.get(position);
+
+                        Intent i = new Intent(MainActivity.this, EditItemActivity.class);
+                        i.putExtra("itemText", curItem);
+                        i.putExtra("itemPosition", position);
+
+                        startActivityForResult(i, REQUEST_CODE);
+
+                    }
+
+        });
     }
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // REQUEST_CODE is defined above
+        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
+            // Extract name value from result extras
+            String editedText = data.getExtras().getString("editedText");
+            int itemPosition = data.getExtras().getInt("itemPosition");
+
+            items.set(itemPosition, editedText);
+            itemsAdapter.notifyDataSetChanged();
+
+            writeItems(items);
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -75,7 +108,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void onAddItem(View v) {
-        EditText etNewItem = (EditText) findViewById(R.id.etNewItem) ;
+        EditText etNewItem = (EditText) findViewById(R.id.etNewItem);
         String itemText = etNewItem.getText().toString();
 
         itemsAdapter.add(itemText);
