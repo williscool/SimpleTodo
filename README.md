@@ -18,4 +18,7 @@ Time Spent: Roughly 3 hours
 - Code is a bit more functional than the code in the tutorials. I try to avoid side effects in my code whereever possible without it becoming unwieldy. Much easier to follow
 
 #### Gif Walkthrough
-TODO
+
+![Video Walkthrough](SimpleTodo_anim_take_2.gif)
+
+GIF created with [LiceCap](http://www.cockos.com/licecap/).
